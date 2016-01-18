@@ -17,8 +17,8 @@ gulp.task('javascript', function () {
   var b = browserify({
     entries: './app/js/main.js',
     debug: true,
-    transform: [babelify]
-  });
+  })
+  .transform(babelify, {presets: ["es2015"]});
 
   return b.bundle()
     .pipe(source('bundle.js'))
@@ -56,12 +56,14 @@ gulp.task('budo', function(cb) {
     live: true,            //live reload & CSS injection
     verbose: true,         //verbose watchify logging
     dir: 'app',            //directory to serve
-    transform: babelify,   //browserify transforms
-    plugin: errorify       //display errors in browser
+    browserify: {
+      transform: babelify,
+      plugin: errorify
+    }
   })
     .on('connect', function(ev) {
 
-      console.log("Server started at "+ev.uri)
+      console.log("Server started at " + ev.uri)
 
     })
     .on('exit', cb);
